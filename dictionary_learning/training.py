@@ -137,7 +137,7 @@ def trainSAE(
     Setting autocast_dtype to t.bfloat16 provides a significant speedup with minimal change in performance.
     """
 
-    device_type = "cuda" if "cuda" in device else "cpu"
+    device_type = device if "cuda" in device else "cpu"
     autocast_context = nullcontext() if device_type == "cpu" else t.autocast(device_type=device_type, dtype=autocast_dtype)
 
     trainers = []
@@ -197,7 +197,7 @@ def trainSAE(
 
     for step, act in enumerate(tqdm(data, total=steps)):
 
-        act = act.to(dtype=autocast_dtype)
+        act = act.to(device, dtype=autocast_dtype)
 
         if normalize_activations:
             act /= norm_factor
