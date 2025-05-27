@@ -250,7 +250,7 @@ class TopKTrainer(SAETrainer):
             return t.tensor(0, dtype=residual_BD.dtype, device=residual_BD.device)
 
     def update_threshold(self, top_acts_BK: t.Tensor):
-        device_type = "cuda" if top_acts_BK.is_cuda else "cpu"
+        device_type = self.device if top_acts_BK.is_cuda else "cpu"
         with t.autocast(device_type=device_type, enabled=False), t.no_grad():
             active = top_acts_BK.clone().detach()
             active[active <= 0] = float("inf")
